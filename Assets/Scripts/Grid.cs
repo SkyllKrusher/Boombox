@@ -13,6 +13,7 @@ public class Grid : MonoBehaviour
         gridSize.x = Mathf.Clamp(gridSize.x, 0, 30);
         gridSize.y = Mathf.Clamp(gridSize.y, 0, 30);
         grid = new Node[gridSize.x, gridSize.y];
+        transform.position = new Vector3(-gridSize.x / 2f, +gridSize.y / 2f, transform.position.z);
     }
 
     private void Start()
