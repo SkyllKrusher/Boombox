@@ -5,7 +5,7 @@ using UnityEngine;
 public enum NodeState
 {
     WALKABLE,
-    DESTRUCTABLE,
+    DESTRICTABLE,
     NONDESTRUCTABLE
 }
 
