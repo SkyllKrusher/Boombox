@@ -17,8 +17,7 @@ public class Grid : MonoBehaviour
 
     #endregion
 
-    // [ExecuteInEditMode]
-
+    #region ------------------- Monobehaviour Methods ---------------
     private void OnValidate()
     {
         gridSize.x = Mathf.Clamp(gridSize.x, 0, 30);
@@ -34,6 +33,7 @@ public class Grid : MonoBehaviour
         PopulateGrid();
         PopulateGridBoundary();
     }
+    #endregion
 
     #region ------------------- Grid creation Methods ----------------------
 
@@ -51,7 +51,7 @@ public class Grid : MonoBehaviour
                 newNodeObj.name = "Tile (" + i + ", " + j + ")";
 
                 grid[i, j] = newNodeObj.GetComponent<Node>();
-                grid[i, j].position = new Vector2(i, j);
+                grid[i, j].positionInGrid = new Vector2Int(i, j);
 
             }
         }
@@ -102,7 +102,7 @@ public class Grid : MonoBehaviour
                     GameObject newNodeObj = Instantiate(tile, gridBoundary.transform);
                     newNodeObj.transform.position = tileWorldPosition;
                     newNodeObj.GetComponent<Node>().spriteRenderer.sprite = nonDestructibleTileSprite;
-                    newNodeObj.GetComponent<Node>().nodeState = NodeState.NONDESTRUCTABLE;
+                    newNodeObj.GetComponent<Node>().nodeState = NodeState.NONDESTRUCTiBLE;
                 }
             }
         }
@@ -112,14 +112,14 @@ public class Grid : MonoBehaviour
     #region --------------- Set Tile type methods ----------------------
     private void MakeTileNondestructible(int row, int column)
     {
-        grid[row, column].nodeState = NodeState.NONDESTRUCTABLE;
+        grid[row, column].nodeState = NodeState.NONDESTRUCTiBLE;
         grid[row, column].spriteRenderer.sprite = nonDestructibleTileSprite;
         grid[row, column].GetComponent<Collider2D>().isTrigger = false;
     }
 
     private void MakeTileDestructible(int row, int column)
     {
-        grid[row, column].nodeState = NodeState.DESTRICTABLE;
+        grid[row, column].nodeState = NodeState.DESTRUCTIBLE;
         grid[row, column].spriteRenderer.sprite = destructibleTileSprite;
         grid[row, column].GetComponent<Collider2D>().isTrigger = false;
     }
@@ -129,6 +129,7 @@ public class Grid : MonoBehaviour
         grid[row, column].nodeState = NodeState.WALKABLE;
         grid[row, column].spriteRenderer.sprite = walkableTileSprite;
         grid[row, column].GetComponent<Collider2D>().isTrigger = true;
+        grid[row, column].gameObject.layer = 6; //walkable layer
     }
     #endregion
 
@@ -146,26 +147,34 @@ public class Grid : MonoBehaviour
     //     }
     // }
 
-    private void OnDrawGizmos()
-    {
-        Vector3 gridGizmoSize = new Vector3(gridSize.x, gridSize.y, 0);
-        Vector3 centerPos = new Vector3(transform.position.x + gridSize.x / 2f, transform.position.y - gridSize.y / 2f, 0);
-        // Vector3 centerPos = transform.position;
-        Gizmos.DrawWireCube(centerPos, gridGizmoSize);
-        // PopulateGridGizmos();
-    }
+    // private void OnDrawGizmos()
+    // {
+    //     Vector3 gridGizmoSize = new Vector3(gridSize.x, gridSize.y, 0);
+    //     Vector3 centerPos = new Vector3(transform.position.x + gridSize.x / 2f, transform.position.y - gridSize.y / 2f, 0);
+    //     // Vector3 centerPos = transform.position;
+    //     Gizmos.DrawWireCube(centerPos, gridGizmoSize);
+    //     PopulateGridGizmos();
+    // }
     #endregion
 
-    public void DestroyTilesNear(int row, int column, int explosionRadius = 2)
+    public void BombGridAt(Vector2Int explosionCenter, int explosionRadius = 2)
     {
-        for (int i = row - explosionRadius; i < row + explosionRadius && i < gridSize.x; i++)
+        int i = Mathf.Max(explosionCenter.x - explosionRadius, 0), j = Mathf.Max(explosionCenter.y - explosionRadius, 0);
+        int iMax = Mathf.Min(explosionCenter.x + explosionRadius, gridSize.x);
+        int jMax = Mathf.Min(explosionCenter.y + explosionRadius, gridSize.y);
+        Debug.Log("i: " + i + ", i max: " + iMax + ", j: " + j + ", j max:" + jMax + "\nTo destroy: ");
+        for (; i < iMax; i++)
         {
-            for (int j = row - explosionRadius; j < column + explosionRadius && j < gridSize.y; j++)
+            for (; j < jMax; j++)
             {
-                if (grid[i, j].nodeState == NodeState.DESTRICTABLE)
-                {
-                    MakeTileWalkable(i, j);
-                }
+                Debug.Log(i + ", " + j);
+                // if (i == explosionCenter.x || j == explosionCenter.y) //TODO: write more efficient loop
+                // {
+                //     if (grid[i, j].nodeState == NodeState.DESTRUCTIBLE)
+                //     {
+                //         MakeTileWalkable(i, j);
+                //     }
+                // }
             }
         }
     }
