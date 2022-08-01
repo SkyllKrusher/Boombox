@@ -138,6 +138,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6757459134711313223, guid: e88302a627981c74493af6239264ddaa, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: e776f61f431bcf94aa8931febb0625d8, type: 2}
     - target: {fileID: 9034723275958389772, guid: e88302a627981c74493af6239264ddaa, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -210,7 +214,7 @@ GameObject:
   - component: {fileID: 503368665}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -536,9 +540,10 @@ MonoBehaviour:
   gridSize: {x: 15, y: 10}
   seed: 0
   tile: {fileID: 8588827079650480630, guid: a53ca4aaa3483ca4ea11249d81d2e098, type: 3}
-  nonDestructibleTileSprite: {fileID: 21300000, guid: 32b2f41e115734c4a85ed197d784ab08, type: 3}
+  nonDestructibleTileSprite: {fileID: 21300000, guid: d84dda9abffde1f4fb71ba4487e5d2a6, type: 3}
+  boundaryTileSprite: {fileID: 21300000, guid: d84dda9abffde1f4fb71ba4487e5d2a6, type: 3}
   destructibleTileSprite: {fileID: 21300000, guid: a87611fdd6e87a54caaf3437863bc052, type: 3}
-  walkableTileSprite: {fileID: 21300000, guid: 4292accf47eb3394aa26051956668545, type: 3}
+  walkableTileSprite: {fileID: 21300000, guid: 6da018cf7fcae6441951a99556dd2658, type: 3}
   gridBoundary: {fileID: 1655618088}
 --- !u!4 &1365624846
 Transform:

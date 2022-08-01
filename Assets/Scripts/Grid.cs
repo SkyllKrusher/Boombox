@@ -10,6 +10,7 @@ public class Grid : MonoBehaviour
     [Space]
     [SerializeField] private GameObject tile;
     [SerializeField] private Sprite nonDestructibleTileSprite;
+    [SerializeField] private Sprite boundaryTileSprite;
     [SerializeField] private Sprite destructibleTileSprite;
     [SerializeField] private Sprite walkableTileSprite;
     [SerializeField] private Transform gridBoundary;
@@ -101,7 +102,7 @@ public class Grid : MonoBehaviour
 
                     GameObject newNodeObj = Instantiate(tile, gridBoundary.transform);
                     newNodeObj.transform.position = tileWorldPosition;
-                    newNodeObj.GetComponent<Node>().spriteRenderer.sprite = nonDestructibleTileSprite;
+                    newNodeObj.GetComponent<Node>().spriteRenderer.sprite = boundaryTileSprite;
                     newNodeObj.GetComponent<Node>().nodeState = NodeState.NONDESTRUCTiBLE;
                 }
             }

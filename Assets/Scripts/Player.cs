@@ -19,10 +19,12 @@ public class Player : MonoBehaviour
     private Vector2Int playerPositionInGrid;
     private Vector2Int bombPositionInGrid;
     private bool isBombPlaced;
+    private Bomb bomb;
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
+        bomb = bombObj.GetComponent<Bomb>();
     }
 
     void Start()
@@ -126,6 +128,12 @@ public class Player : MonoBehaviour
     {
         yield return new WaitForSeconds(boomTime);
         grid.BombGridAt(bombPositionInGrid);
+        bomb.Explode();
+
+        //TODO: move this to Bomb script
+        float bombAnimationTime = 2f;
+        yield return new WaitForSeconds(bombAnimationTime);
+        bombObj.SetActive(false);
         isBombPlaced = false;
     }
 }

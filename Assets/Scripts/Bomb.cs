@@ -18,8 +18,20 @@ public class Bomb : MonoBehaviour
     //     yield return new WaitForSeconds(boomTime);
     // }
 
-    // private void Explode()
-    // {
+    [SerializeField] private Animator animator;
+    private static string Explosion_3x3_Animation = "Explosion_3x3";
 
-    // }
+    public void Explode()
+    {
+        Debug.Log("booom!!");
+        animator.Play(Explosion_3x3_Animation);
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.tag == "Player")
+        {
+
+        }
+    }
 }
