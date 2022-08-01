@@ -159,22 +159,23 @@ public class Grid : MonoBehaviour
 
     public void BombGridAt(Vector2Int explosionCenter, int explosionRadius = 2)
     {
-        int i = Mathf.Max(explosionCenter.x - explosionRadius, 0), j = Mathf.Max(explosionCenter.y - explosionRadius, 0);
-        int iMax = Mathf.Min(explosionCenter.x + explosionRadius, gridSize.x);
-        int jMax = Mathf.Min(explosionCenter.y + explosionRadius, gridSize.y);
-        Debug.Log("i: " + i + ", i max: " + iMax + ", j: " + j + ", j max:" + jMax + "\nTo destroy: ");
-        for (; i < iMax; i++)
+        int rowMin = Mathf.Max(explosionCenter.x - explosionRadius, 0);
+        int columnMin = Mathf.Max(explosionCenter.y - explosionRadius, 0);
+        int rowMax = Mathf.Min(explosionCenter.x + explosionRadius, gridSize.x - 1);
+        int columnMax = Mathf.Min(explosionCenter.y + explosionRadius, gridSize.y - 1);
+        Debug.Log("row Min: " + rowMin + ", row max: " + rowMax + ", column min: " + columnMin + ", column max:" + columnMax + "\nTo destroy: ");
+        for (int row = rowMin; row <= rowMax; row++)
         {
-            for (; j < jMax; j++)
+            for (int column = columnMin; column <= columnMax; column++)
             {
-                Debug.Log(i + ", " + j);
-                // if (i == explosionCenter.x || j == explosionCenter.y) //TODO: write more efficient loop
-                // {
-                //     if (grid[i, j].nodeState == NodeState.DESTRUCTIBLE)
-                //     {
-                //         MakeTileWalkable(i, j);
-                //     }
-                // }
+                Debug.Log(row + ", " + column);
+                if (row == explosionCenter.x || column == explosionCenter.y) //TODO: write more efficient loop
+                {
+                    if (grid[row, column].nodeState == NodeState.DESTRUCTIBLE)
+                    {
+                        MakeTileWalkable(row, column);
+                    }
+                }
             }
         }
     }
