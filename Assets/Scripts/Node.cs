@@ -6,7 +6,7 @@ public enum NodeState
 {
     WALKABLE,
     DESTRUCTIBLE,
-    NONDESTRUCTiBLE
+    NONDESTRUCTIBLE
 }
 
 public class Node : MonoBehaviour

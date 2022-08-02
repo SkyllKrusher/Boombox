@@ -105,7 +105,7 @@ public class Player : MonoBehaviour
     //TODO: move some lines in Bomb methods to Bomb.cs script
     private void DropBomb()
     {
-        if (bomb.IsBomBPlaced())
+        if (bomb.IsBombPlaced())
             return;
 
         // Debug.Log("Bomb: " + bombPositionInGrid);
