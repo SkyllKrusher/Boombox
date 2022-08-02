@@ -164,12 +164,12 @@ public class Grid : MonoBehaviour
         int columnMin = Mathf.Max(explosionCenter.y - explosionRadius, 0);
         int rowMax = Mathf.Min(explosionCenter.x + explosionRadius, gridSize.x - 1);
         int columnMax = Mathf.Min(explosionCenter.y + explosionRadius, gridSize.y - 1);
-        Debug.Log("row Min: " + rowMin + ", row max: " + rowMax + ", column min: " + columnMin + ", column max:" + columnMax + "\nTo destroy: ");
+        // Debug.Log("row Min: " + rowMin + ", row max: " + rowMax + ", column min: " + columnMin + ", column max:" + columnMax + "\nTo destroy: ");
         for (int row = rowMin; row <= rowMax; row++)
         {
             for (int column = columnMin; column <= columnMax; column++)
             {
-                Debug.Log(row + ", " + column);
+                // Debug.Log(row + ", " + column);
                 if (row == explosionCenter.x || column == explosionCenter.y) //TODO: write more efficient loop
                 {
                     if (grid[row, column].nodeState == NodeState.DESTRUCTIBLE)
@@ -179,5 +179,10 @@ public class Grid : MonoBehaviour
                 }
             }
         }
+    }
+
+    public Vector2 GetWorldPositionFromNodePosition(Vector2Int nodePosition)
+    {
+        return grid[nodePosition.x, nodePosition.y].transform.position;
     }
 }

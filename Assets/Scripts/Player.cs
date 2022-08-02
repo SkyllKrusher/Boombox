@@ -7,24 +7,16 @@ public class Player : MonoBehaviour
     [SerializeField] private Grid grid;
     [SerializeField] private float speed;
     [SerializeField] private LayerMask walkableLayers;
+    [SerializeField] private Bomb bomb;
     // [SerializeField] private GameObject bombPrefab;
-    [Space]
-    [Header("Bomb Settings")]
-    [SerializeField] private float boomTime;
-    [SerializeField] private GameObject bombObj;
-    [SerializeField] private Transform bombParentTransform;
     private Vector2 moveDirection;
 
     private Rigidbody2D rb;
     private Vector2Int playerPositionInGrid;
-    private Vector2Int bombPositionInGrid;
-    private bool isBombPlaced;
-    private Bomb bomb;
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
-        bomb = bombObj.GetComponent<Bomb>();
     }
 
     void Start()
@@ -38,8 +30,8 @@ public class Player : MonoBehaviour
 
     private void InitPlayer()
     {
-        transform.position = grid.grid[0, 0].transform.position;
-        isBombPlaced = false;
+        Vector2Int playerStartGridPos = new Vector2Int(0, 0);
+        transform.position = grid.GetWorldPositionFromNodePosition(playerStartGridPos);
     }
     // Update is called once per frame
     void Update()
@@ -110,30 +102,16 @@ public class Player : MonoBehaviour
         rb.MovePosition(currentPosition + translation);
     }
 
+    //TODO: move some lines in Bomb methods to Bomb.cs script
     private void DropBomb()
     {
-        if (isBombPlaced)
+        if (bomb.IsBomBPlaced())
             return;
 
-        isBombPlaced = true;
-        bombPositionInGrid = playerPositionInGrid;
         // Debug.Log("Bomb: " + bombPositionInGrid);
-        // bombObj = Instantiate(bombPrefab, bombParentTransform);
-        bombObj.SetActive(true);
-        bombObj.transform.position = grid.grid[playerPositionInGrid.x, playerPositionInGrid.y].transform.position;
-        StartCoroutine(ExplodeBombAfterDelay());
+
+        bomb.Place(playerPositionInGrid);
     }
 
-    private IEnumerator ExplodeBombAfterDelay()
-    {
-        yield return new WaitForSeconds(boomTime);
-        grid.BombGridAt(bombPositionInGrid);
-        bomb.Explode();
 
-        //TODO: move this to Bomb script
-        float bombAnimationTime = 2f;
-        yield return new WaitForSeconds(bombAnimationTime);
-        bombObj.SetActive(false);
-        isBombPlaced = false;
-    }
 }
