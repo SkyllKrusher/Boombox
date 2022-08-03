@@ -13,7 +13,7 @@ public class Bomb : MonoBehaviour
     [SerializeField] private float boomTime;
     [SerializeField] private int explosionRadius;
     [SerializeField] private GameObject bombSpriteObj;
-    [SerializeField] private GameObject explosionObj;
+    [SerializeField] private Explosion explosionPrefab;
     [SerializeField] private Transform explosionsParentTransform;
     [SerializeField] private float explosionAnimationTime;
     private Vector2Int bombPositionInGrid;
@@ -58,6 +58,8 @@ public class Bomb : MonoBehaviour
         ExplodeAnimation(bombPositionInGrid, Vector2.right, explosionRadius);
     }
 
+
+    //TODO: move some lines to explosion.cs
     private void ExplodeAnimation(Vector2Int position, Vector2 direction, int length)
     {
         if (length <= 0)
@@ -76,29 +78,24 @@ public class Bomb : MonoBehaviour
     }
 
 
-    private IEnumerator DestroyObjAfterExplosionAnimation(GameObject obj)
-    {
-        yield return new WaitForSeconds(explosionAnimationTime);
-        Destroy(obj);
-    }
 
     private void ExplosionAnimationAtPosition(Vector2Int nodePos, Vector2 direction, Vector2 offset, string animationClipName)
     {
         //TODO: Object pool
-        GameObject explosionObj = Instantiate(this.explosionObj, explosionsParentTransform);
+        Explosion explosion = Instantiate(explosionPrefab, explosionsParentTransform);
 
         if (direction.x == 0)
         {
             direction *= -1;
             offset *= -1;
         }
-        explosionObj.transform.position = grid.GetWorldPositionFromNodePosition(nodePos) + offset;
-        float angle = Mathf.Atan2(direction.y, direction.x);
-        explosionObj.transform.rotation = Quaternion.AngleAxis(angle * Mathf.Rad2Deg, Vector3.forward);
 
-        explosionObj.GetComponent<Animator>().Play(animationClipName);
+        Vector2 pos = grid.GetWorldPositionFromNodePosition(nodePos);
 
-        StartCoroutine(DestroyObjAfterExplosionAnimation(explosionObj));
+        explosion.InitExplosion(pos + offset, direction, pos);
+        explosion.PlayExplosion(animationClipName);
+
+        explosion.DestroyObjAfterExplosion(explosionAnimationTime);
     }
 
     public void Place(Vector2Int _bombPosinGrid)

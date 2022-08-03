@@ -28,12 +28,6 @@ public class Grid : MonoBehaviour
         // PopulateGrid();
     }
 
-    private void Awake()
-    {
-        CreateGrid();
-        PopulateGrid();
-        PopulateGridBoundary();
-    }
     #endregion
 
     #region ------------------- Grid creation Methods ----------------------
@@ -190,6 +184,24 @@ public class Grid : MonoBehaviour
         return grid[x, y].transform.position;
     }
 
+    public void Init()
+    {
+        CreateGrid();
+        PopulateGridAndBoundary();
+    }
+
+    private void PopulateGridAndBoundary()
+    {
+        PopulateGrid();
+        PopulateGridBoundary();
+    }
+
+    public void LoadGrid(int _seed = 0)
+    {
+        seed = _seed;
+        PopulateGridAndBoundary();
+    }
+
     // public Node[,] GetExplosionNodes()
     // {
     //     Node[,] explodingNodes = new Node[0, 0];
@@ -199,31 +211,31 @@ public class Grid : MonoBehaviour
     //         return explodingNodes;
     // }
 
-    public List<Vector2Int> GetSideExplosionPositionsFromCenter(Vector2Int explosionCenter, int explosionRadius = 2)
-    {
-        List<Vector2Int> explosionPositons = new List<Vector2Int>();
+    // public List<Vector2Int> GetSideExplosionPositionsFromCenter(Vector2Int explosionCenter, int explosionRadius = 2)
+    // {
+    //     List<Vector2Int> explosionPositons = new List<Vector2Int>();
 
-        int rowMin = Mathf.Max(explosionCenter.x - explosionRadius, 0);
-        int columnMin = Mathf.Max(explosionCenter.y - explosionRadius, 0);
-        int rowMax = Mathf.Min(explosionCenter.x + explosionRadius, gridSize.x - 1);
-        int columnMax = Mathf.Min(explosionCenter.y + explosionRadius, gridSize.y - 1);
-        Debug.Log("row Min: " + rowMin + ", row max: " + rowMax + ", column min: " + columnMin + ", column max:" + columnMax + "\nTo destroy: ");
-        for (int row = rowMin; row <= rowMax; row++)
-        {
-            for (int column = columnMin; column <= columnMax; column++)
-            {
-                // Debug.Log(row + ", " + column);
-                if (row == explosionCenter.x || column == explosionCenter.y) //TODO: write more efficient loop
-                {
-                    if (grid[row, column].nodeState != NodeState.NONDESTRUCTIBLE)
-                    {
-                        Vector2Int pos = new Vector2Int(row, column);
-                        explosionPositons.Add(pos);
-                    }
-                }
-            }
-        }
+    //     int rowMin = Mathf.Max(explosionCenter.x - explosionRadius, 0);
+    //     int columnMin = Mathf.Max(explosionCenter.y - explosionRadius, 0);
+    //     int rowMax = Mathf.Min(explosionCenter.x + explosionRadius, gridSize.x - 1);
+    //     int columnMax = Mathf.Min(explosionCenter.y + explosionRadius, gridSize.y - 1);
+    //     Debug.Log("row Min: " + rowMin + ", row max: " + rowMax + ", column min: " + columnMin + ", column max:" + columnMax + "\nTo destroy: ");
+    //     for (int row = rowMin; row <= rowMax; row++)
+    //     {
+    //         for (int column = columnMin; column <= columnMax; column++)
+    //         {
+    //             // Debug.Log(row + ", " + column);
+    //             if (row == explosionCenter.x || column == explosionCenter.y) //TODO: write more efficient loop
+    //             {
+    //                 if (grid[row, column].nodeState != NodeState.NONDESTRUCTIBLE)
+    //                 {
+    //                     Vector2Int pos = new Vector2Int(row, column);
+    //                     explosionPositons.Add(pos);
+    //                 }
+    //             }
+    //         }
+    //     }
 
-        return explosionPositons;
-    }
+    //     return explosionPositons;
+    // }
 }

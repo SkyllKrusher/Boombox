@@ -8,6 +8,7 @@ public class Player : MonoBehaviour
     [SerializeField] private float speed;
     [SerializeField] private LayerMask walkableLayers;
     [SerializeField] private Bomb bomb;
+    [SerializeField] private float deathAnimationTime;
     // [SerializeField] private GameObject bombPrefab;
     private Vector2 moveDirection;
 
@@ -19,20 +20,6 @@ public class Player : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
     }
 
-    void Start()
-    {
-        if (grid)
-        {
-            // Debug.Log("Grid not null");
-            InitPlayer();
-        }
-    }
-
-    private void InitPlayer()
-    {
-        Vector2Int playerStartGridPos = new Vector2Int(0, 0);
-        transform.position = grid.GetWorldPositionFromNodePosition(playerStartGridPos);
-    }
     // Update is called once per frame
     void Update()
     {
@@ -111,6 +98,30 @@ public class Player : MonoBehaviour
         // Debug.Log("Bomb: " + bombPositionInGrid);
 
         bomb.Place(playerPositionInGrid);
+    }
+
+    private void DeathAnimation()
+    {
+        StartCoroutine(DestroyPlayerAfterDeathAnimations());
+    }
+
+    private IEnumerator DestroyPlayerAfterDeathAnimations()
+    {
+        yield return new WaitForSeconds(deathAnimationTime);
+        gameObject.SetActive(false);
+    }
+
+    public void Init()
+    {
+        gameObject.SetActive(true);
+        Vector2Int playerStartGridPos = new Vector2Int(0, 0);
+        transform.position = grid.GetWorldPositionFromNodePosition(playerStartGridPos);
+    }
+
+    public void Death()
+    {
+        this.enabled = false;
+        DeathAnimation();
     }
 
 
