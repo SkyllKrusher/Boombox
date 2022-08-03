@@ -55,19 +55,19 @@ public class Player : MonoBehaviour
     // }
     private void MovementInput()
     {
-        if (Input.GetKey(KeyCode.RightArrow))
+        if (Input.GetKey(KeyCode.D))
         {
             SetMoveDirection(Vector2.right);
         }
-        else if (Input.GetKey(KeyCode.LeftArrow))
+        else if (Input.GetKey(KeyCode.A))
         {
             SetMoveDirection(Vector2.left);
         }
-        else if (Input.GetKey(KeyCode.UpArrow))
+        else if (Input.GetKey(KeyCode.W))
         {
             SetMoveDirection(Vector2.up);
         }
-        else if (Input.GetKey(KeyCode.DownArrow))
+        else if (Input.GetKey(KeyCode.S))
         {
             SetMoveDirection(Vector2.down);
         }
