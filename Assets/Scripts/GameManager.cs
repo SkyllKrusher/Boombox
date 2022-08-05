@@ -25,14 +25,22 @@ public class GameManager : MonoBehaviour
     // private static string GameSceneName = "GameScene";
     // private static string MainMenuSceneName = "MainMenuScene";
     private LevelController levelController;
+    // private EnemyController enemyController;
     private Player player;
     private Grid grid;
 
     private void Start()
     {
+        InitGameScene();
+    }
+
+    private void InitGameScene()
+    {
         InitGrid();
         InitPlayer();
         InitLevelController();
+        levelController.FirstLevel();
+        // InitEnemyController();
     }
 
     private void InitGrid()
@@ -50,8 +58,13 @@ public class GameManager : MonoBehaviour
     private void InitLevelController()
     {
         levelController = FindObjectOfType<LevelController>();
-        levelController.Init();
     }
+
+    // private void InitEnemyController()
+    // {
+    //     enemyController = FindObjectOfType<EnemyController>();
+    //     enemyController.Init();
+    // }
 
     public void Death()
     {
@@ -65,7 +78,7 @@ public class GameManager : MonoBehaviour
         player.Init();
     }
 
-    public void LoadGrid(int seed = 0)
+    public void LoadGrid(int seed)
     {
         grid.LoadGrid(seed);
     }

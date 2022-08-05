@@ -14,6 +14,9 @@ public class Grid : MonoBehaviour
     [SerializeField] private Sprite destructibleTileSprite;
     [SerializeField] private Sprite walkableTileSprite;
     [SerializeField] private Transform gridBoundary;
+    [SerializeField] private Transform desturctibleTilesParent;
+    [SerializeField] private Transform nonDestructibleTilesParent;
+    [SerializeField] private Transform walkableTilesParent;
     public Node[,] grid;
     public Vector2Int GridSize { get { return gridSize; } }
     #endregion
@@ -110,6 +113,7 @@ public class Grid : MonoBehaviour
         grid[row, column].nodeState = NodeState.NONDESTRUCTIBLE;
         grid[row, column].spriteRenderer.sprite = nonDestructibleTileSprite;
         grid[row, column].GetComponent<Collider2D>().isTrigger = false;
+        grid[row, column].transform.parent = nonDestructibleTilesParent;
     }
 
     private void MakeTileDestructible(int row, int column)
@@ -117,6 +121,7 @@ public class Grid : MonoBehaviour
         grid[row, column].nodeState = NodeState.DESTRUCTIBLE;
         grid[row, column].spriteRenderer.sprite = destructibleTileSprite;
         grid[row, column].GetComponent<Collider2D>().isTrigger = false;
+        grid[row, column].transform.parent = desturctibleTilesParent;
     }
 
     private void MakeTileWalkable(int row, int column)
@@ -125,6 +130,7 @@ public class Grid : MonoBehaviour
         grid[row, column].spriteRenderer.sprite = walkableTileSprite;
         grid[row, column].GetComponent<Collider2D>().isTrigger = true;
         grid[row, column].gameObject.layer = 6; //walkable layer
+        grid[row, column].transform.parent = walkableTilesParent;
     }
     #endregion
 
@@ -187,7 +193,6 @@ public class Grid : MonoBehaviour
     public void Init()
     {
         CreateGrid();
-        PopulateGridAndBoundary();
     }
 
     private void PopulateGridAndBoundary()
@@ -200,6 +205,47 @@ public class Grid : MonoBehaviour
     {
         seed = _seed;
         PopulateGridAndBoundary();
+    }
+
+    private List<Node> GetWalkableNeighboursAt(Vector2Int gridPos)
+    {
+        List<Node> neighbours = new List<Node>();
+        Vector2Int[] directions = { Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right };
+        for (int i = 0; i < 4; i++)
+        {
+            neighbours.Add(GetWalkableNeighbourInDir(gridPos, directions[i]));
+        }
+
+        return neighbours;
+    }
+
+    public List<Vector2Int> GetWalkableNeighboursWorldPositions(Vector2Int gridPos)
+    {
+        List<Node> neighbours = GetWalkableNeighboursAt(gridPos);
+        List<Vector2Int> neighbourWorldPositions = new List<Vector2Int>();
+        for (int i = 0; i < neighbours.Count; i++)
+        {
+            neighbourWorldPositions.Add(neighbours[i].positionInGrid);
+        }
+        return neighbourWorldPositions;
+    }
+
+    private Node GetWalkableNeighbourInDir(Vector2Int gridPos, Vector2Int direction)
+    {
+        Vector2Int neighbourGridPos = gridPos + direction;
+        if (neighbourGridPos.x >= gridSize.x || neighbourGridPos.x < 0 || neighbourGridPos.y >= gridSize.y || neighbourGridPos.y < 0)
+            return null;
+
+        if (GridNode(gridPos + direction).nodeState != NodeState.WALKABLE)
+        {
+            return null;
+        }
+        return GridNode(gridPos + direction);
+    }
+
+    private Node GridNode(Vector2Int pos)
+    {
+        return grid[pos.x, pos.y];
     }
 
     // public Node[,] GetExplosionNodes()

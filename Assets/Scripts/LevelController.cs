@@ -33,7 +33,7 @@ public class LevelController : MonoBehaviour
         GameManager.Instance.ResetPlayer();
     }
 
-    public void Init()
+    public void FirstLevel()
     {
         LoadLevel(0);
     }
