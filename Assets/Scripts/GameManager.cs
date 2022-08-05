@@ -1,7 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     #region ----------------------------------------- Init Singleton ----------------------------------------
@@ -21,17 +19,27 @@ public class GameManager : MonoBehaviour
     }
 
     #endregion -----------------------------------------------------------------------------------------------
-
-    // private static string GameSceneName = "GameScene";
-    // private static string MainMenuSceneName = "MainMenuScene";
+    [SerializeField] private bool logsEnabled;
+    private static string GameSceneName = "GameScene";
+    private static string MainMenuSceneName = "MainMenuScene";
     private LevelController levelController;
     // private EnemyController enemyController;
+    private GameUIView gameUIView;
     private Player player;
     private Grid grid;
 
-    private void Start()
+    private void OnEnable()
     {
-        InitGameScene();
+        SceneManager.sceneLoaded += OnSceneLoaded;
+        Debug.unityLogger.logEnabled = logsEnabled;
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode sceneMode)
+    {
+        if (scene.name == GameSceneName)
+        {
+            InitGameScene();
+        }
     }
 
     private void InitGameScene()
@@ -39,8 +47,9 @@ public class GameManager : MonoBehaviour
         InitGrid();
         InitPlayer();
         InitLevelController();
-        levelController.FirstLevel();
+        levelController.RandomLevel();
         // InitEnemyController();
+        InitGameUIView();
     }
 
     private void InitGrid()
@@ -66,10 +75,20 @@ public class GameManager : MonoBehaviour
     //     enemyController.Init();
     // }
 
+    private void InitGameUIView()
+    {
+        gameUIView = FindObjectOfType<GameUIView>();
+    }
+
     public void Death()
     {
         Debug.Log("ded :(");
-        // player.Death();
+        player.DeathSequence();
+    }
+
+    public void Lose()
+    {
+        gameUIView.LoseScreen();
     }
 
     public void ResetPlayer()
@@ -81,5 +100,15 @@ public class GameManager : MonoBehaviour
     public void LoadGrid(int seed)
     {
         grid.LoadGrid(seed);
+    }
+
+    public void LoadGameScene()
+    {
+        SceneManager.LoadScene(GameSceneName);
+    }
+
+    public void LoadMenuScene()
+    {
+        SceneManager.LoadScene(MainMenuSceneName);
     }
 }

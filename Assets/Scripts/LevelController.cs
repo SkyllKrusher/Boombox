@@ -33,9 +33,10 @@ public class LevelController : MonoBehaviour
         GameManager.Instance.ResetPlayer();
     }
 
-    public void FirstLevel()
+    public void RandomLevel()
     {
-        LoadLevel(0);
+        int randomSeed = (int)System.DateTime.Now.Ticks;
+        LoadLevel(randomSeed);
     }
 
 

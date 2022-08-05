@@ -20,6 +20,7 @@ public class EnemyController : MonoBehaviour
     {
         enemies = new List<Enemy>();
         seed = 0;
+        //find empty position and create 5 enemies there
         CreateEnemy(new Vector2Int(1, 0));
     }
 }

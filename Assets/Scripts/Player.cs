@@ -8,8 +8,10 @@ public class Player : MonoBehaviour
     [SerializeField] private float speed;
     [SerializeField] private LayerMask walkableLayers;
     [SerializeField] private Bomb bomb;
-    [SerializeField] private float deathAnimationTime;
-    // [SerializeField] private GameObject bombPrefab;
+    private Animator animator;
+    private static string deathClipName = "Death";
+    private static float deathAnimationTime = 0.55f;
+
     private Vector2 moveDirection;
 
     private Rigidbody2D rb;
@@ -18,6 +20,7 @@ public class Player : MonoBehaviour
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
+        animator = GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -41,18 +44,7 @@ public class Player : MonoBehaviour
     {
         Move();
     }
-    // private void OnTriggerEnter2D(Collider2D other)
-    // {
-    //     if (other.tag == "Tile")
-    //     {
-    //         playerPositionInGrid = other.gameObject.GetComponent<Node>().positionInGrid;
-    //         // Debug.Log("Player Pos in grid: " + playerPositionInGrid);
-    //     }
-    // }
-    // private void OnDrawGizmos()
-    // {
-    //     Gizmos.DrawWireSphere(transform.position, 0.25f);
-    // }
+
     private void MovementInput()
     {
         if (Input.GetKey(KeyCode.D))
@@ -102,13 +94,15 @@ public class Player : MonoBehaviour
 
     private void DeathAnimation()
     {
-        StartCoroutine(DestroyPlayerAfterDeathAnimations());
+        animator.Play(deathClipName);
+        StartCoroutine(AfterDeathAnimations());
     }
 
-    private IEnumerator DestroyPlayerAfterDeathAnimations()
+    private IEnumerator AfterDeathAnimations()
     {
         yield return new WaitForSeconds(deathAnimationTime);
-        gameObject.SetActive(false);
+        GameManager.Instance.Lose();
+        // gameObject.SetActive(false);
     }
 
     public void Init()
@@ -118,11 +112,9 @@ public class Player : MonoBehaviour
         transform.position = grid.GetWorldPositionFromNodePosition(playerStartGridPos);
     }
 
-    public void Death()
+    public void DeathSequence()
     {
         this.enabled = false;
         DeathAnimation();
     }
-
-
 }
